@@ -31,10 +31,12 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
+//Pagina raiz del server
 app.get('/', (req, res) => {
     res.send('<h1>Phonebook application</h1>')
 })
 
+//Metodo para devolver informacion de la agenda
 app.get('/info', (req, res) => {
     res.send(
         `<p>Phonebook has info for ${persons.length} people</p>
@@ -42,10 +44,12 @@ app.get('/info', (req, res) => {
     )
 })
 
+//Metodo para obtener todas las personas de la agenda
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
+//Metodo para obtener una persona de la agenda
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     const person = persons.find(person => person.id === id)
@@ -57,9 +61,23 @@ app.get('/api/persons/:id', (req, res) => {
     }
 })
 
-app.delete('/api/persons/:id', (req,res) => {
+//Metodo para eliminar una persona de la agenda
+app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
     persons = persons.filter(person => person.id !== id)
 
     res.status(204).end()
+})
+
+//Metodo para añadir una nueva persona a la agenda
+app.post('/api/persons/', (req, res) => {
+    const id = Math.floor(Math.random() * 200)
+    const body = req.body
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: id,
+    }
+    persons = persons.concat(person)
+    res.json(person)
 })
